@@ -1,29 +1,30 @@
-
-pipeline{
-    agent { label 'slave1'}
+pipeline {
+    agent any 
     
     stages{
-        stage("Code clone"){
-            steps{
-                sh "whoami"
-            clone("https://github.com/LondheShubham153/django-notes-app.git","main")
+        stage("Clone Code"){
+            steps {
+                echo "Cloning the code"
+                git url:"https://github.com/LondheShubham153/django-notes-app.git", branch: "main"
             }
         }
-        stage("Code Build"){
-            steps{
-            dockerbuild("notes-app","latest")
+        stage("Build"){
+            steps {
+                echo "Building the image"
+                sh "docker build -t my-note-app ."
             }
         }
-        stage("Push to DockerHub"){
-            steps{
-                dockerpush("dockerHubCreds","notes-app","latest")
-            }
+        Stage ("test"){
+                steps {
+                    echo "this is testing phase"
+                }
         }
         stage("Deploy"){
-            steps{
-                deploy()
+            steps {
+                echo "Deploying the container"
+                sh "docker-compose down && docker-compose up -d"
+                
             }
         }
-        
     }
 }
