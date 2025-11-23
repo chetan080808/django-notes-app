@@ -14,7 +14,7 @@ pipeline {
                 sh "docker build -t my-note-app ."
             }
         }
-        Stage("test"){
+        stage("test"){
                 steps {
                     echo "this is testing phase"
                 }
